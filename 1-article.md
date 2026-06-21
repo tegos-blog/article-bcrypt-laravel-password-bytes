@@ -158,6 +158,8 @@ That user from the intro (the one locked out with a valid password) hit the spli
 - [PHP: password_hash](https://www.php.net/manual/en/function.password-hash.php)
 - [PHP: password_verify](https://www.php.net/manual/en/function.password-verify.php)
 - [OWASP: Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)
+- [securinglaravel.com: Limiting bcrypt Passwords to 72 Bytes](https://securinglaravel.com/security-tip-limiting-bcrypt-passwords-to-72-bytes/)
+- [Laravel PR #54509: Add bcrypt byte limit](https://github.com/laravel/framework/pull/54509)
 
 ## Author's Note
 
