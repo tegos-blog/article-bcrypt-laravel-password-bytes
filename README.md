@@ -17,4 +17,4 @@ The original password still verifies. But strip the emoji, or let a password man
 
 ## Read Full
 
-[bcrypt and Laravel: 72 Bytes, Not 72 Characters](https://dev.to/tegos/PLACEHOLDER)
+[bcrypt and Laravel: 72 Bytes, Not 72 Characters](https://dev.to/tegos/bcrypt-and-laravel-72-bytes-not-72-characters-3jb1)
