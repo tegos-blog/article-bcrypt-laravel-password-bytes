@@ -137,8 +137,6 @@ password_verify(hash_hmac('sha256', $input, $pepper), $stored);
 
 Plain `hash('sha256', $password)` without a pepper has a known weakness: if bcrypt is cracked, the attacker gets the raw SHA-256 hash and can crack it without bcrypt's cost (password shucking). The HMAC form closes that gap. Either way, this is non-standard and adds complexity to your auth layer.
 
----
-
 If you're starting a new app, use Argon2id and skip this entire problem (check `defined('PASSWORD_ARGON2ID')` first - some shared hosts and older builds lack it). If you're maintaining an existing bcrypt app, add the byte-length validator today and plan a migration to Argon2id when you have the runway.
 
 That user from the intro (the one locked out with a valid password) hit the split-byte case. The fix is one validator rule.
@@ -153,7 +151,7 @@ That user from the intro (the one locked out with a valid password) hit the spli
 
 💡 Use `strlen()` to validate password byte length. `mb_strlen()` won't catch the dangerous cases.
 
----
+## References
 
 - [PHP: password_hash](https://www.php.net/manual/en/function.password-hash.php)
 - [PHP: password_verify](https://www.php.net/manual/en/function.password-verify.php)
