@@ -1,6 +1,6 @@
 I expected bcrypt to silently drop characters past 72. I did not expect it to bake in half an emoji.
 
-That's what happens with a specific password combination I tested. The user can't log in - not with the original password, not with the truncated version. PHP returns `false` both ways. And your Laravel validator passed it as valid.
+That's what happens with a specific password combination I tested. The original password still works. But strip the emoji - a password manager, a different keyboard, a Unicode normalizer - and you're locked out. Your Laravel validator passed it as valid the whole time.
 
 ## The 72-Byte Rule
 
@@ -145,15 +145,19 @@ That user from the intro - the one locked out with a valid password - hit the sp
 
 ## TL;DR
 
-- bcrypt truncates at 72 **bytes**, not 72 characters
-- Past the limit, extra length adds zero security - a 200-char Cyrillic password hashes identically to its own first 36 characters
-- For multi-byte scripts, the effective limit is much shorter: 36 Cyrillic, 24 CJK, 18 emoji
-- If the byte boundary falls inside a multi-byte character, the emoji becomes load-bearing: the exact original string works, but any Cyrillic-only attempt fails - the user is locked out if anything strips or changes the emoji
-- `Password::max(72)` uses `mb_strlen`, so it counts characters, not bytes - it does not catch this
-- Laravel 12 `BCRYPT_LIMIT=72` throws on overflow at hash time, but does not block invalid input at the form level
-- Fix: validate with `strlen($password) > 72`, switch to Argon2id, or pre-hash with `hash_hmac('sha256', ...)` before bcrypt
+- bcrypt truncates at 72 **bytes**, not characters - Cyrillic caps at 36 chars, CJK at 24, emoji at 18
+- If the cut falls inside a multi-byte char, the trailing emoji becomes load-bearing: original verifies, anything that strips the emoji does not
+- `Password::max(72)` uses `mb_strlen` (characters, not bytes) - it does not catch this
+- Laravel 12 `BCRYPT_LIMIT=72` throws at hash time but does not block invalid input at the form level
+- Fix: validate with `strlen($password) > 72`, switch to Argon2id, or pre-hash with `hash_hmac('sha256', ...)`
 
 💡 Use `strlen()` to validate password byte length. `mb_strlen()` won't catch the dangerous cases.
+
+---
+
+- [PHP: password_hash](https://www.php.net/manual/en/function.password-hash.php)
+- [PHP: password_verify](https://www.php.net/manual/en/function.password-verify.php)
+- [OWASP: Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)
 
 ## Author's Note
 
